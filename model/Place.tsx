@@ -1,6 +1,6 @@
 declare class Place {
   id: string;
-  imageUrl: string;
+  image: string;
   title: string;
   description: string;
   address: string;

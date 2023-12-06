@@ -8,6 +8,7 @@ import "./PlaceList.css";
 
 type Props = {
   items: Place[];
+  onDeletePlace: (deletePlaceId: string) => void;
 };
 
 const PlaceList = (props: Props) => {
@@ -28,12 +29,13 @@ const PlaceList = (props: Props) => {
         <PlaceItem
           key={place.id}
           id={place.id}
-          image={place.imageUrl}
+          image={place.image}
           title={place.title}
           description={place.description}
           address={place.address}
           creatorId={place.creator}
           coordinates={place.location}
+          onDeletePlace={props.onDeletePlace}
         />
       ))}
     </ul>

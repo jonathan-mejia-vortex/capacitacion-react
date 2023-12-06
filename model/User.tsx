@@ -1,8 +1,10 @@
+import Place from "./Place";
+
 declare class User {
   id: string;
   image: string;
   name: string;
-  places: number;
+  places: Place[];
 }
 
 export default User;

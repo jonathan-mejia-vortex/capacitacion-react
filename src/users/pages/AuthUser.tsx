@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 import {
   VALIDATOR_EMAIL,
@@ -42,6 +43,7 @@ const AuthUser = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -53,6 +55,10 @@ const AuthUser = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false,
+          }
         },
         false
       );
@@ -64,24 +70,34 @@ const AuthUser = () => {
     event.preventDefault();
 
     let url: string;
-    let body: any = {
-      email: formState.inputs.email.value,
-      password: formState.inputs.password.value,
-    };
+    let body: any;
+    let contentType = { };
+
     if (isLoginMode) {
       url = "http://localhost:5000/api/users/login";
+      body = JSON.stringify({
+        email: formState.inputs.email.value,
+        password: formState.inputs.password.value,
+      });
+      contentType = {
+        "Content-Type": "application/json",
+      }
     } else {
       url = "http://localhost:5000/api/users/signup";
-      body = {
-        ...body,
-        name: formState.inputs.name.value,
-      };
+      body = new FormData();
+      body.append("email", formState.inputs.email.value);
+      body.append("password", formState.inputs.password.value);
+      body.append("name", formState.inputs.name.value);
+      body.append("image", formState.inputs.image.value);
     }
 
     try {
-      const responseData = await sendRequest(url, "POST", JSON.stringify(body), {
-        "Content-Type": "application/json",
-      });
+      const responseData = await sendRequest(
+        url,
+        "POST",
+        body,
+        contentType
+      );
       auth.login(responseData.user.id);
     } catch (error) {}
   };
@@ -103,6 +119,14 @@ const AuthUser = () => {
               validators={[VALIDATOR_REQUIRE()]}
               errorText="Please enter a valid name"
               onInput={inputHandler}
+            />
+          )}
+          {!isLoginMode && (
+            <ImageUpload
+              id="image"
+              center
+              onInput={inputHandler}
+              errorText="Please provide an image"
             />
           )}
           <Input

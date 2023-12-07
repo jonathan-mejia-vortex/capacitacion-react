@@ -10,8 +10,6 @@ type Props = {
 }
 
 const UsersList = (props: Props) => {
-  const IMG_PATH: string = window.location.origin + "/img/pikachu.jpg"
-
   if (props.items.length === 0) {
     return (
       <div className="center">
@@ -28,8 +26,7 @@ const UsersList = (props: Props) => {
         <UserItem 
           key={user.id}
           id={user.id}
-          // image={user.image}
-          image={IMG_PATH}
+          image={`http://localhost:5000/${user.image}`}
           name={user.name}
           placeCount={user.places.length}
         />
